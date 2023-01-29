@@ -1,3 +1,7 @@
+//นางสาวพิมพา นารี 65543206074-8
+//https://youtu.be/TvhVIB0pPHE
+
+
 #include<stdio.h>
 #include<stdlib.h>
 
