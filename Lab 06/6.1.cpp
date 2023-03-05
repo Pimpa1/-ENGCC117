@@ -2,106 +2,102 @@
 #include <string.h>
 
 struct studentNode {
-  char name[20];
-  int age;
-  char sex;
-  float gpa;
-  struct studentNode *next;
-  struct studentNode *back;
-};
+ char name[ 20 ] ;
+ int age ;
+ char sex ;
+ float gpa ;
+ struct studentNode *next ;
+ struct studentNode *back ;
+} ;
 
-void ShowAll(struct studentNode *walk);
-void ShowBack(struct studentNode *walk);
-struct studentNode *AddNode(struct studentNode **node, char name[20], int age, char sex, float gpa);
-void InsNode(struct studentNode *node, char name[20], int age, char sex, float gpa);
-void GoBack(struct studentNode **node);
-void DelNode(struct studentNode **node);
+void ShowAll( struct studentNode *walk ) ;
+struct studentNode *AddNode ( struct studentNode **, char [], int, char , float  ) ;
+void InsNode( struct studentNode *, char [], int , char , float  ) ;
+void GoBack( struct studentNode ** ) ;
+void DelNode( struct studentNode *walk ) ;
 
 int main() {
-  struct studentNode *start, *now;
-  start = NULL;
-  now = AddNode(&start, "one", 6, 'M', 3.11);
-  ShowAll(start);
-  now = AddNode(&start, "two", 8, 'F', 3.22);
-  ShowAll(start);
-  InsNode(now, "three", 10, 'M', 3.33);
-  ShowAll(start);
-  InsNode(now, "four", 12, 'F', 3.44);
-  ShowAll(start);
-  GoBack(&now);
-  DelNode(&now);
-  ShowAll(start);
-  DelNode(&now);
-  ShowAll(start);
-  DelNode(&now);
-  ShowAll(start);
-  return 0;
-} // end function
+ struct studentNode *start, *now ;
+ start = NULL ;
+ now = AddNode( &start, "one", 6, 'M', 3.11 ) ; ShowAll( start ) ;
+ now = AddNode( &start, "two", 8, 'F', 3.22 ) ; ShowAll( start ) ;
+ InsNode( now, "three", 10, 'M', 3.33 ) ; ShowAll( start ) ;
+ InsNode( now, "four", 12, 'F', 3.44 ) ; ShowAll( start ) ;
+ GoBack( &now ) ;
+ DelNode( now ) ; ShowAll( start ) ;
+ DelNode( now ) ; ShowAll( start ) ;
+ DelNode( now ) ; ShowAll( start ) ;
+ return 0 ;
+}//end function
 
-void ShowAll(struct studentNode *walk) {
-  while (walk != NULL) {
-    printf("%s ", walk->name);
-    walk = walk->next;
-  } // end while
-  printf("\n");
-} // end function
+void ShowAll( struct studentNode *walk ) {
+ while( walk != NULL ) {
+  printf( "%s ", walk->name ) ;
+  walk = walk->next ;
+ }//end while
+ printf( " \n" ) ;
+}//end function
 
-void ShowBack(struct studentNode *walk) {
-  while (walk != NULL) {
-    printf("form showback %s ", walk->name);
-    walk = walk->back;
-  } // end while
-  printf("\n");
+struct studentNode *AddNode ( struct studentNode **walk, char name[], int age, char sex, float gpa ) {
+	struct studentNode *temp = NULL ;
+	while ( (*walk) != NULL ) {
+		temp = *walk ;
+		walk = &(*walk)->next ;
+	} 
+	*walk = new struct studentNode ;
+	strcpy((*walk)->name, name) ;
+	(*walk)->age = age ;
+	(*walk)->sex = sex ;
+	(*walk)->gpa = gpa ;
+	(*walk)->next = NULL ;
+	(*walk)->back = temp ;
+	return *walk ;
 }
 
-struct studentNode *AddNode(struct studentNode **node, char name[20], int age, char sex, float gpa) {
-  struct studentNode *temp = *node;
-  struct studentNode *newnode = new struct studentNode;
-  strcpy(newnode->name, name);
-  newnode->age = age;
-  newnode->sex = sex;
-  newnode->gpa = gpa;
-  newnode->next = NULL;
-  if (*node == NULL) { // If current node is NULL set newnode to current node and newnode->back to NULL
-    newnode->back = NULL;
-    *node = newnode;
-    return newnode;
-  }
-  while (temp != NULL) { // To find node before the current node
-    if (temp->next == NULL) { // To check if it's NULL or not
-      break; // If it break out form while
-    } 
-    temp = temp->next; 
-  }
-  newnode->back = temp; // Make newnode->back point to current node
-  temp->next = newnode; // Make current node->next point to newnode
-  return newnode;
+void InsNode( struct studentNode *walk, char name[], int age, char sex, float gpa ){
+	if ( walk->back != NULL ){
+		walk->back->next = new struct studentNode ;
+		strcpy(walk->back->next->name, name) ;
+		walk->back->next->age = age ;
+		walk->back->next->sex = sex ;
+		walk->back->next->gpa = gpa ;
+		walk->back->next->next = walk ;
+		walk->back->next->back = walk->back ;
+		walk->back = walk->back->next ;
+	}
+	else {
+		struct studentNode *begin = new struct studentNode ;
+		strcpy(begin->name, name) ;
+		begin->age = age ;
+		begin->sex = sex ;
+		begin->gpa = gpa ;
+		begin->next = walk ;
+		begin->back = NULL ;
+		walk->back = begin ;
+	}
+	
 }
 
-void InsNode(struct studentNode *now, char name[20], int age, char sex, float gpa) {
-  now->back->next = new struct studentNode; // Create another node on in front of node now
-  strcpy(now->back->next->name, name);
-  now->back->next->age = age;
-  now->back->next->sex = sex;
-  now->back->next->gpa = gpa;
-  now->back->next->back = now->back;
-  now->back->next->next = now;
-  now->back = now->back->next;
+void GoBack( struct studentNode **walk ) {
+	if ( (*walk)->back != NULL ) {
+		*walk = (*walk)->back ;
+	}
 }
 
-void GoBack(struct studentNode **node) {
-  *node = (*node)->back; // Move now to another node
-}
-
-void DelNode(struct studentNode **node) {
-  if ((*node)->next == NULL) { // Check if next node is NULL or not
-    (*node)->back->next = NULL; // Change pointing of back->next to NULL
-    delete *node;
-    *node = (*node)->back;
-    return;
-  }
-  (*node)->back->next = (*node)->next; // Make the previous node->next point to the next node of current
-  (*node)->next->back = (*node)->back; // Make the posterior node->back point to the node before current node
-  delete *node;
-  *node = (*node)->next;
+void DelNode( struct studentNode *walk ) {
+	struct studentNode *holder ;
+	if ( walk-> back != NULL ) {
+		walk->back->next = walk->next ;
+	}
+	else {
+		walk = walk->next ;
+	}
+	if ( walk-> next != NULL ) {
+		walk->next->back = walk->back ;
+		holder = walk->next ;
+	}
+	else {
+		holder = walk->back ;
+	}
+	*walk = *holder ;
 }
