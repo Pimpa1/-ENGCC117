@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 struct studentNode {
  char name[ 20 ] ;
  int age ;
@@ -9,7 +8,6 @@ struct studentNode {
  float gpa ;
  struct studentNode *next ;
 } ;
-
 class LinkedList {
  protected :
   struct studentNode *start, **now ;
@@ -26,16 +24,13 @@ class LinkedList {
   struct studentNode *NowNode ;
   void EditNode( char n[], int a, char s, float g ) ;
 } ; //end class
-
 LinkedList :: LinkedList () {
 	this -> start = NULL ;
 	(this->now) = &(this->start) ;
 }
-
 LinkedList :: ~LinkedList () {
 	printf("\nreturn memery by 1 list.") ;
 }
-
 void LinkedList :: InsNode( char n[], int a, char s, float g ) {
 	if ( (*this->now) == NULL ){
 		(*this->now) = new struct studentNode ;
@@ -78,7 +73,6 @@ void LinkedList :: GoLast() {
   		( this->now) = &(*this->now)->next ;
  	}//end while
 }
-
 void LinkedList :: ShowAll() {
   	struct studentNode *holder = this->start ;
  while( holder != NULL ) {
@@ -87,7 +81,6 @@ void LinkedList :: ShowAll() {
  }//end while
  printf( " \n" ) ;
 }
-
 int LinkedList :: FindNode( char n[] ) {
 	int i = 0 ;
 	struct studentNode *holder = this->start ;
@@ -105,7 +98,6 @@ int LinkedList :: FindNode( char n[] ) {
 	}
 	return i ;
 }
-
 void LinkedList :: EditNode( char n[], int a, char s, float g ) {
 	strcpy((*this->now)->name, n) ;
 	(*this->now)->age = a ;
@@ -114,14 +106,11 @@ void LinkedList :: EditNode( char n[], int a, char s, float g ) {
 	this->NowNode = this->start ;
 	
 }
-
-
 void EditData( LinkedList *ll ) ;
 void AddData( LinkedList *ll ) ;
 void FindData( LinkedList *ll ) ;
 void readfile( LinkedList *ll ) ;
 void writefile( LinkedList *ll ) ;
-
 int main() {
  LinkedList listA ;
  int menu ;
@@ -142,7 +131,6 @@ int main() {
  //writefile( &listA ) ;
  return 0 ;
 }//end function
-
 void EditData( LinkedList *ll ) {
 	char name[ 20 ] ;
  	int age ;
@@ -161,7 +149,6 @@ void EditData( LinkedList *ll ) {
  	scanf( "%f", &gpa ) ;
 	ll->EditNode( name, age, sex, gpa ) ;
 }
-
 void AddData( LinkedList *ll ) {
 	char name[ 20 ] ;
  	int age ;
@@ -187,7 +174,6 @@ void FindData( LinkedList *ll ) {
  	gets( name ) ;
 	i = ll->FindNode( name ) ;
 }
-
 void readfile( LinkedList *ll ) {
 	FILE *fp ;
 	fp = fopen("studernt.dat", "r+") ;
@@ -200,7 +186,20 @@ void readfile( LinkedList *ll ) {
 	}
 	fclose( fp ) ;
 }
-
+void writefile( LinkedList *ll ) {
+	FILE *fp ;
+	fp = fopen("studernt.dat", "w+") ;
+	if(fp == NULL) {
+		printf("Don't Found your File.") ; exit( 0 ) ;	
+	}
+	fwrite(ll->NowNode, sizeof(struct studentNode), 1, fp) ;
+	fclose( fp ) ;
+}	struct studentNode children ;
+	while( fread(&children, sizeof(struct studentNode), 1, fp ) != 0 ){
+		ll->InsNode( children.name, children.age, children.sex, children.gpa ) ;
+	}
+	fclose( fp ) ;
+}
 void writefile( LinkedList *ll ) {
 	FILE *fp ;
 	fp = fopen("studernt.dat", "w+") ;
